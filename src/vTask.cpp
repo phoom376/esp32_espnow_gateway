@@ -13,8 +13,8 @@ void serial_com_sent(void *pvParameters)
 {
     while (true)
     {
-        char *t = createTest().c_str();
-        sent_serial(t);
+        // char *t = createTest().c_str();
+        // sent_serial(t);
         Serial.println("Hello World Sent");
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }

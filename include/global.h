@@ -1,6 +1,4 @@
 #include <Arduino.h>
-#include <esp_now.h>
-#include <esp_wifi.h>
 
 #define SENT_RX_PIN 16
 #define SENT_TX_PIN 17

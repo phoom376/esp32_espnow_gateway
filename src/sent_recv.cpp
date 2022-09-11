@@ -1,7 +1,9 @@
 #include <sent_recv.h>
+#include <espnow.h>
 
 HardwareSerial RECV(1);
 HardwareSerial SENT(2);
+EspNow en;
 
 typedef struct recv_struct
 {
@@ -32,15 +34,6 @@ void recv_serial()
     {
         strcpy(RECV_MESSAGE, RECV.readString().c_str());
 
-        esp_err_t result = esp_now_send(BOARD_CAST_ADDRESS, (uint8_t *)&RECV_MESSAGE, sizeof(RECV_MESSAGE));
-
-        if (result == ESP_OK)
-        {
-            Serial.println("Sent with success");
-        }
-        else
-        {
-            Serial.println("Error sending the data");
-        }
+        en.sent_data(BOARD_CAST_ADDRESS, RECV_MESSAGE);
     }
 }

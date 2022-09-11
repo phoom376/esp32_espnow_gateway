@@ -4,7 +4,7 @@
 #include <vTask.h>
 #include <WiFi.h>
 
-esp_now_peer_info_t peerInfo;
+EspNow en;
 
 void setup()
 {
@@ -14,22 +14,8 @@ void setup()
 
   // espnow_init();
 
-  if (esp_now_init() != ESP_OK)
-  {
-    Serial.println("Error initializing ESP-NOW");
-  }
+  en.init();
 
-  esp_now_register_send_cb(OnDataSent);
-  esp_now_register_recv_cb(OnDataRecv);
-
-  memcpy(peerInfo.peer_addr, BOARD_CAST_ADDRESS, 6);
-  peerInfo.channel = 0;
-  peerInfo.encrypt = false;
-
-  if (esp_now_add_peer(&peerInfo) != ESP_OK)
-  {
-    Serial.println("Failed to add peer");
-  }
 
   sent_recv_init();
 
