@@ -1,39 +1,44 @@
 #include <sent_recv.h>
 #include <espnow.h>
 
-HardwareSerial RECV(1);
-HardwareSerial SENT(2);
-EspNow en;
+// HardwareSerial RECV(2);
+// HardwareSerial SENT(1);
+HardwareSerial SENT_RECV(1);
 
-typedef struct recv_struct
+EspNow en_sent;
+
+typedef struct _recv_struct
 {
-    char payload[4096];
-} recv_struct;
+    char _payload[200];
+} _recv_struct;
 
-recv_struct recv_message;
+recv_struct _recv_message;
 
 void sent_recv_init()
 {
-    SENT.begin(115200, SERIAL_8N1, SENT_TX_PIN, SENT_RX_PIN);
-    RECV.begin(115200, SERIAL_8N1, RECV_TX_PIN, RECV_RX_PIN);
+    SENT_RECV.begin(115200, SERIAL_8N1, SENT_RECV_RX_PIN, SENT_RECV_TX_PIN);
 }
 
-void sent_serial(char *_payload)
+void sent_serial(char *recv)
 {
+    DynamicJsonDocument sent(250);
 
-    SENT.print(_payload);
+    DeserializationError err = deserializeJson(sent, recv);
+
+    // String txt = String(_payload);
+    // SENT_RECV.println(txt);
+    serializeJson(sent, SENT_RECV);
+    SENT_RECV.println();
     Serial.print("SENT SERIAL :");
-    Serial.println(_payload);
-    SENT.flush();
-    Serial.flush();
+    serializeJson(sent, Serial);
 }
 
 void recv_serial()
 {
-    while (RECV.available())
+    while (SENT_RECV.available())
     {
-        strcpy(RECV_MESSAGE, RECV.readString().c_str());
+        strcpy(_recv_message._payload, SENT_RECV.readString().c_str());
 
-        en.sent_data(BOARD_CAST_ADDRESS, RECV_MESSAGE);
+        en_sent.sent_data(BOARD_CAST_ADDRESS, _recv_message);
     }
 }

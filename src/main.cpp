@@ -12,10 +12,12 @@ void setup()
 
   WiFi.mode(WIFI_STA);
 
+    WiFi.macAddress();
+
+
   // espnow_init();
 
   en.init();
-
 
   sent_recv_init();
 
